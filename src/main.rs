@@ -1,7 +1,7 @@
 extern crate serde;
 extern crate serde_json;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io;
 use std::io::Write;
@@ -26,15 +26,13 @@ impl Task {
 }
 
 fn read_tasks_from_file() -> Result<Vec<Task>, serde_json::Error> {
-    let file = fs::read_to_string(FILE_PATH)
-        .unwrap_or("[]".into());
+    let file = fs::read_to_string(FILE_PATH).unwrap_or("[]".into());
     serde_json::from_str(file.as_str())
 }
 
 fn write_tasks_to_file(tasks: &Vec<Task>) -> Result<(), io::Error> {
     let tasks = serde_json::to_string_pretty(tasks).unwrap();
-    fs::File::create(FILE_PATH)?
-        .write_all(tasks.as_bytes())
+    fs::File::create(FILE_PATH)?.write_all(tasks.as_bytes())
 }
 
 fn change_task_state(task: &mut Task, state: bool) {
@@ -55,7 +53,7 @@ fn main() {
         "Remove task",
         "Change task state",
         "Show tasks",
-        "Exit"
+        "Exit",
     ];
 
     loop {
@@ -89,7 +87,7 @@ fn main() {
                 let new_task = Task::new(title, description);
                 tasks.push(new_task);
                 write_tasks_to_file(&tasks).unwrap();
-            },
+            }
             2 => {
                 print_tasks(&tasks);
                 print!("index: ");
@@ -102,7 +100,7 @@ fn main() {
                 };
                 tasks.remove(index);
                 write_tasks_to_file(&tasks).unwrap();
-            },
+            }
             3 => {
                 print_tasks(&tasks);
                 print!("index: ");
